@@ -72,9 +72,10 @@ class Server:
         total_pages = math.ceil(len(dataset) / page_size)
         start_index, end_index = index_range(page, page_size)
 
-        if page < total_pages:
+        try:
+            data = dataset[end_index]
             hyper['next_page'] = page + 1
-        else:
+        except IndexError:
             hyper['next_page'] = None
 
         if start_index == 0:
