@@ -82,7 +82,7 @@ class Server:
             hyper['prev_page'] = None
         else:
             hyper['prev_page'] = page - 1
-        
+
         hyper['total_pages'] = total_pages
 
         return hyper
