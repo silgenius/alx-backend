@@ -7,7 +7,7 @@ To be written
 
 import csv
 import math
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
@@ -61,7 +61,7 @@ class Server:
         finally:
             return result
 
-    def get_hyper(self, page: int = 1, page_size: int = 10):
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> Dict:
         hyper = {}
         data = self.get_page(page, page_size)
         hyper['page_size'] = len(data)
