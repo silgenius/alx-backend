@@ -81,13 +81,7 @@ class Server:
         else:
             hyper['prev_page'] = page - 1
 
-        dataset_len = len(dataset)
-        total_size = int(dataset_len / page_size)
-        rem = dataset_len - (page_size * total_size)
-
-        if rem:  # if remainder is non-zero (has remainder)
-            hyper['total_pages'] = total_size + 1
-        else:
-            hyper['total_pages'] = total_size
+        total_pages = math.ceil(len(dataset) / page_size)
+        hyper['total_pages'] = total_pages
 
         return hyper
