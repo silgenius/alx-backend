@@ -71,9 +71,8 @@ class Server:
         start_index, end_index = index_range(page, page_size)
         dataset = self.dataset()
         try:
-            data = dataset[end_index + 1]
-            if data:
-                hyper['next_page'] = page + 1
+            data = dataset[end_index]
+            hyper['next_page'] = page + 1
         except IndexError:
             hyper['next_page'] = None
 
