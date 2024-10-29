@@ -40,13 +40,29 @@ class Server:
         return self.__indexed_dataset
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
+        """
+        get_hyper_index method with two integer arguments:
+        index with a None default value and page_size with
+        default value of 10
+        """
         assert index >= 0 and index <= len(self.dataset())
         indexed_data = self.indexed_dataset()
         hyper = {}
-        dataset = self.dataset()
-
+        data = []
+        
         hyper['index'] = index
-        hyper['data'] = dataset[index:(index + page_size)]
+        idx = index
+
+        while idx < index + page_size:
+            value = indexed_data.get(idx)
+            if value:
+                data.append(value)
+            else:
+                index += 1
+            idx += 1
+
+        hyper['data'] = data
+        hyper['page_size'] = page_size
         hyper['next_index'] = index + page_size
         return hyper
 
