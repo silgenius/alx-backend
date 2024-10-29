@@ -49,7 +49,7 @@ class Server:
         indexed_data = self.indexed_dataset()
         hyper = {}
         data = []
-        
+
         hyper['index'] = index
         idx = index
 
@@ -65,4 +65,3 @@ class Server:
         hyper['page_size'] = page_size
         hyper['next_index'] = index + page_size
         return hyper
-
