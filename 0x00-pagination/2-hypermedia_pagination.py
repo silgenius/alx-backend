@@ -62,6 +62,10 @@ class Server:
             return result
 
     def get_hyper(self, page: int = 1, page_size: int = 10) -> Dict:
+        """
+        get_hyper_index method with two integer arguments: index with a
+        None default value and page_size with default value of 10
+        """
         hyper = {}
         data = self.get_page(page, page_size)
         hyper['page_size'] = len(data)
