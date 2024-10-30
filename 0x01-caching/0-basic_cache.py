@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
-""" BaseCaching module
+"""
+Module
+contains:
+- BaseCaching class
+- Basic Cache
 """
 
 
@@ -40,6 +44,12 @@ class BasicCache(BaseCaching):
     """
     Implement put and get for caching system
     """
+    def __init__(self):
+        """
+        Initialize
+        """
+        super().__init__()
+
     def put(self, key, item):
         """ Add an item in the cache
         """
