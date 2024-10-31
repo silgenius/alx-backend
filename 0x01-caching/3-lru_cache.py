@@ -13,7 +13,7 @@ class LRUCache(BasicCache):
     """
     Implement the LRU caching algorithm
     """
-    lru = OrderedDict()
+    lru = OrderedDict()  # keep track of recently used key
 
     def __init__(self):
         """
@@ -28,7 +28,7 @@ class LRUCache(BasicCache):
             self.cache_data[key] = item
             self.lru[key] = item
             if len(self.cache_data) > BaseCaching.MAX_ITEMS:
-                item = self.lru.popitem(last=False)
+                item = self.lru.popitem(last=False)  # delete first key in dict
                 self.cache_data.pop(item[0])
                 print(f'DISCARD: {item[0]}')
 
@@ -36,5 +36,5 @@ class LRUCache(BasicCache):
         """ Get an item by key
         """
         if self.cache_data.get(key):
-            self.lru.move_to_end(key)
+            self.lru.move_to_end(key)  # move recently used key to end
         return self.cache_data.get(key)
