@@ -27,7 +27,10 @@ class LFUCache(BasicCache):
             self.cache_data[key] = item
 
             if len(self.cache_data) > BaseCaching.MAX_ITEMS:
-                sorted_keys = sorted(self.key_count.items(), key=lambda x: x[1])
+                sorted_keys = sorted(
+                        self.key_count.items(),
+                        key=lambda x: x[1]
+                        )
                 self.cache_data.pop(sorted_keys[0][0])
                 self.key_count.pop(sorted_keys[0][0])
                 print(f'DISCARD: {sorted_keys[0][0]}')
