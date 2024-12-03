@@ -8,12 +8,15 @@ const sendNotification = function(phoneNumber, message, job, done) {
     job.progress(0, 100);
 
     if (blacklistedNumbers.includes(phoneNumber)) {
-        job.failed(new Error(`Phone number ${phoneNumber} is blacklisted`));
-        return done(new Error(`Phone number ${phoneNumber} is blacklisted`));
+        done(new Error(`Phone number ${phoneNumber} is blacklisted`));
     }
 
-    job.progress(50, 100);
-    console.log(`Sending notification to ${phoneNumber}, with message: ${message}`)
+    // Simulate asynchronous operation
+    setTimeout(() => {
+        job.progress(50, 100);
+        console.log(`Sending notification to ${phoneNumber}, with message: ${message}`);
+    }, 1000) // 1 sec
+    done();
 }
 
 queue.process('push_notification_code_2', 2, (job, done) => {
