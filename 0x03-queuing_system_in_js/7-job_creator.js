@@ -61,15 +61,15 @@ for (const jobData of jobs) {
     });
 
     job.on('complete', () => {
-        console.log(`Notification ${job.id} completed`);
+        console.log(`Notification #${job.id} completed`);
     });
     
     job.on('failed', (err) => {
-        console.log(`Notification ${job.id} failed`);
+        console.log(`Notification #${job.id} failed: ${err}`);
     });
 
     job.on('progress', (progress) => {
-        console.log(`Notification job ${job.id} ${progress}% complete`)
+        console.log(`Notification job #${job.id} ${progress}% complete`)
     });
 }
 
