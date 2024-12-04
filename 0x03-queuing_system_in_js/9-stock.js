@@ -1,6 +1,8 @@
+import redis form 'redis';
 const express = require('express');
-
 const app = express();
+
+const redisClient = redis.createClient();
 
 const listProducts = [
     { itemId: 1, itemName: 'Suitcase 250', price: 50, stock: 4 },
@@ -17,13 +19,56 @@ function getItemByitemId(id) {
     }
 }
 
+function reserveStockById(itemId, stock){
+    redisClient.set(itemId, stock, redis.print)
+}
+
+const getAsync = promisify(redisClient.get).bind(client);
+
+async function getCurrentReservedStockById(itemId) {
+    try {
+	    const value = await getAsync(itemId);
+	    return value;
+    } catch(err) {
+	    console.log(err);
+    }
+}
+
 const port = 1245;
 const hostitemName = '127.0.0.1';
 
 app.get('/list_products', (req, res) => {
     res.json(listProducts);
-})
+});
+
+app.get('/list_products/:itemId', (req, res) => {
+	const product = getItemByitemId(itemId);
+	if (!product) {
+		res.json({"status":"Product not found"});
+	}
+	const productCurrentAvailability = getCurrentReservedStockById(itemId);
+	if (productCurrentAvailability) {
+		product["currentQuantity"] = productCurrentAvailability;
+	}
+	res.json(product);
+});
+
+app.get('/reserve_product/:itemId, (req, res) => {
+	const product = getItemByitemId(itemId);
+        if (!product) {
+                res.json({"status":"Product not found"});
+        }
+
+	if (product.
 
 app.listen(port, () => {
     console.log(`Server running at http://${hostitemName}:${port}/`);
-})
+});
+
+redisClient.on('connect', () => {
+	console.log('Redis client connected to the server');
+});
+
+redisClient.on('error', (err) => {
+	console.log(`Redis client not connected to the server: ${err}`);
+});
