@@ -62,7 +62,7 @@ app.get('/reserve_product/:itemId', (req, res) => {
 	const product = getItemByitemId(itemId);
 
     if (!product) {
-        res.json({"status":"Product not found"});i
+        res.json({"status":"Product not found"});
 	    return;
     }
 
