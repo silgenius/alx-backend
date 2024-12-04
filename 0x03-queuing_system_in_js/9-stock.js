@@ -1,7 +1,7 @@
 import redis from 'redis';
 const express = require('express');
 const app = express();
-
+import { promisify } from "util";
 const redisClient = redis.createClient();
 
 const listProducts = [
@@ -42,21 +42,27 @@ app.get('/list_products', (req, res) => {
 });
 
 app.get('/list_products/:itemId', (req, res) => {
+	let { itemId } = req.params;
+	itemId = Number(itemId);
 	const product = getItemByitemId(itemId);
 	if (!product) {
 		res.json({"status":"Product not found"});
+		return;
 	}
 	const ReservedStockQuantity = getCurrentReservedStockById(itemId);
-	if (ReservedStockQuantity) {
+	if (ReservedStockQuantity != 'null') {
 		product["ReservedStockQuantity"] = product.initialAvailableQuantity - ReservedStockQuantity;
 	}
 	res.json(product);
 });
 
 app.get('/reserve_product/:itemId', (req, res) => {
+	let { itemId } = req.params;
+	itemId = Number(itemId);
 	const product = getItemByitemId(itemId);
     if (!product) {
-            res.json({"status":"Product not found"});
+            res.json({"status":"Product not found"});i
+	    return;
     }
 
     if (product.initialAvailableQuantity < 1) {
