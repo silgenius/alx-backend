@@ -1,4 +1,4 @@
-import { describe, it } from 'moncha';
+import { describe, it } from 'mocha';
 import kue from 'kue';
 import createPushNotificationsJobs from './8-job'
 import chai from 'chai'
@@ -9,23 +9,19 @@ const sinon = require('sinon');
 
 let queue;
 
-describe("createPushNotificationsJobs", () => {
-    beforeEach(() => {
+describe("createPushNotificationsJobs", function() {
+    before(() => {
         queue = kue.createQueue();
-        queue.testMode = true;
+        queue.testMode.enter(true);
     });
 
-    afterEach(() => {
-        queue.testMode = false;
-        queue.shutdown(500, (err) => {
-            if (err) {
-                console.log(err);
-            }
-        })
+    after(() => {
+        queue.testMode.clear();
+	queue.testMode.exit();
     });
 
     it("display a error message if jobs is not an array", function() {
-        expect(createPushNotificationsJobs({}, queue)).to.throw(Error, 'Jobs is not an array');
+        expect(createPushNotificationsJobs.bind(createPushNotificationsJobs, {}, queue)).to.throw(Error, 'Jobs is not an array');
     });
 
     it("create two new jobs to the queue", function(done) {
@@ -35,10 +31,6 @@ describe("createPushNotificationsJobs", () => {
         ];
 
         createPushNotificationsJobs(jobs, queue);
-
-        queue.on('complete', () => {
-            expect(queue.jobs.length).to.equal(2);
-            done();
-        });
+	expect(queue.testMode.jobs.length).to.be.equal(2);
     });
 })
