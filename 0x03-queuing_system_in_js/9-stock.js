@@ -41,7 +41,7 @@ app.get('/list_products', (req, res) => {
     res.json(listProducts);
 });
 
-app.get('/list_products/:itemId', (req, res) => {
+app.get('/list_products/:itemId', async (req, res) => {
 	let { itemId } = req.params;
 	itemId = Number(itemId);
 	const product = getItemByitemId(itemId);
@@ -49,8 +49,8 @@ app.get('/list_products/:itemId', (req, res) => {
 		res.json({"status":"Product not found"});
 		return;
 	}
-	const ReservedStockQuantity = getCurrentReservedStockById(itemId);
-	if (ReservedStockQuantity != 'null') {
+	const ReservedStockQuantity = await getCurrentReservedStockById(itemId);
+	if (ReservedStockQuantity) {
 		product["ReservedStockQuantity"] = product.initialAvailableQuantity - ReservedStockQuantity;
 	}
 	res.json(product);
@@ -60,8 +60,9 @@ app.get('/reserve_product/:itemId', (req, res) => {
 	let { itemId } = req.params;
 	itemId = Number(itemId);
 	const product = getItemByitemId(itemId);
+
     if (!product) {
-            res.json({"status":"Product not found"});i
+        res.json({"status":"Product not found"});i
 	    return;
     }
 
@@ -69,7 +70,7 @@ app.get('/reserve_product/:itemId', (req, res) => {
         res.json({ status: "Not enough stock available", itemId: itemId })
     }
     else {
-        reserveStockById(itemId, 1) // Reserve one stock
+        reserveStockById(itemId, 1); // Reserve one stock
         res.json({ status:"Reservation confirmed", itemId: itemId });
     }
 })
