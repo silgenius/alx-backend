@@ -10,27 +10,29 @@ const sinon = require('sinon');
 let queue;
 
 describe("createPushNotificationsJobs", function() {
-    before(() => {
-        queue = kue.createQueue();
-        queue.testMode.enter(true);
-    });
+    before(function() {
+  queue.testMode.enter();
+});
 
-    after(() => {
-        queue.testMode.clear();
-	queue.testMode.exit();
-    });
+afterEach(function() {
+  queue.testMode.clear();
+});
+
+after(function() {
+  queue.testMode.exit()
+});
 
     it("display a error message if jobs is not an array", function() {
         expect(createPushNotificationsJobs.bind(createPushNotificationsJobs, {}, queue)).to.throw(Error, 'Jobs is not an array');
     });
 
-    it("create two new jobs to the queue", function(done) {
+    it("create two new jobs to the queue", function() {
         const jobs = [
             { phoneNumber: '4153518780', message: 'This is the code 1234 to verify your account' },
             { phoneNumber: '4153518781', message: 'This is the code 4562 to verify your account' }
         ];
 
         createPushNotificationsJobs(jobs, queue);
-	expect(queue.testMode.jobs.length).to.be.equal(2);
+	expect(queue.jobs.length).to.be.equal(2);
     });
-})
+});
