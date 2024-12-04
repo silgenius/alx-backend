@@ -40,6 +40,7 @@ describe("createPushNotificationsJobs", function() {
         const jobs = [
             { phoneNumber: '4153518780', message: 'This is the code 1234 to verify your account' },
         ]
+        createPushNotificationsJobs(jobs, queue);
         expect(queue.testMode.jobs[0].type).to.equal('push_notification_code_3')
     });
 });
