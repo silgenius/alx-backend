@@ -6,6 +6,8 @@ import express from 'express';
 const queue = kue.createQueue();
 const redisClient = redis.createClient();
 const app = express();
+const port = 1245;
+const hostitemName = '127.0.0.1';
 
 let reservationEnabled = true;
 
@@ -18,17 +20,22 @@ const getAsync = promisify(redisClient.get).bind(redisClient);
 async function getCurrentAvailableSeats() {
     try {
         const result = await getAsync('available_seats');
+	return result;
     } catch(err) {
         console.log(err);
     }
-    return result;
 }
 
 reserveSeat(50); // sets the default number of available seats to 50
 
 app.get('/available_seats', async (req, res) => {
-    const available_seat = await getCurrentAvailableSeats();
-    res.json({ numberOfAvailableSeats: available_seat });
+    try {
+	const available_seat = await getCurrentAvailableSeats();
+	res.json({ numberOfAvailableSeats: available_seat });
+    } catch(err) {
+	console.log(err);
+	 return;
+    }
 });
 
 app.get('/reserve_seat', (req, res) => {
@@ -47,11 +54,11 @@ app.get('/reserve_seat', (req, res) => {
     });
 
     job.on('complete', () => {
-        console.log('Seat reservation job JOB_ID completed');
+        console.log(`Seat reservation job ${job.id} completed`);
     });
 
     job.on('failed', (err) => {
-        console.log(`Seat reservation job JOB_ID failed: ${err}`);
+        console.log(`Seat reservation job ${job.id} failed: ${err}`);
     });
 });
 
